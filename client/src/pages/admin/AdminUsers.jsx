@@ -129,7 +129,7 @@ export default function AdminUsers() {
               <table className="data-table">
                 <thead>
                   <tr>
-                    <th>ID</th>
+                    <th>#</th>
                     <th>Name</th>
                     <th>Email</th>
                     <th>Phone</th>
@@ -139,9 +139,9 @@ export default function AdminUsers() {
                   </tr>
                 </thead>
                 <tbody>
-                  {users.map(u => (
+                  {users.map((u, idx) => (
                     <tr key={u.UserID}>
-                      <td style={{ fontFamily: 'monospace', fontSize: '0.8rem', color: 'var(--gray-400)' }}>#{u.UserID}</td>
+                      <td style={{ fontSize: '0.85rem', color: 'var(--gray-500)' }}>{(page - 1) * 15 + idx + 1}</td>
                       <td style={{ fontWeight: 600 }}>{u.FirstName} {u.LastName}</td>
                       <td>{u.Email}</td>
                       <td style={{ fontSize: '0.85rem' }}>{u.PhoneNumber}</td>
