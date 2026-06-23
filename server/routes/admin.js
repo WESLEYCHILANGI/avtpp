@@ -105,7 +105,10 @@ router.put('/gates/:id', async (req, res) => {
 router.get('/users', async (req, res) => {
   try {
     const { page = 1, limit = 20, search } = req.query;
-    const offset = (parseInt(page) - 1) * parseInt(limit);
+    // Bounded integers — inlined into the SQL (some MySQL servers reject
+    // placeholder LIMIT/OFFSET in prepared statements). Safe: not user strings.
+    const lim = Math.min(Math.max(parseInt(limit) || 20, 1), 100);
+    const off = Math.max((parseInt(page) - 1) * lim, 0);
 
     let sql = 'SELECT UserID, FirstName, LastName, Email, PhoneNumber, DateRegistered, IsActive FROM Users';
     const params = [];
@@ -118,8 +121,7 @@ router.get('/users', async (req, res) => {
 
     const countResult = await query(sql.replace('SELECT UserID, FirstName, LastName, Email, PhoneNumber, DateRegistered, IsActive', 'SELECT COUNT(*) as total'), params);
 
-    sql += ' ORDER BY DateRegistered DESC LIMIT ? OFFSET ?';
-    params.push(parseInt(limit), offset);
+    sql += ` ORDER BY DateRegistered DESC LIMIT ${lim} OFFSET ${off}`;
 
     const users = await query(sql, params);
     res.json({ users, total: countResult[0].total });

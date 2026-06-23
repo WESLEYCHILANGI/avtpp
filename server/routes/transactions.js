@@ -10,7 +10,10 @@ router.use(authenticateToken);
 router.get('/', async (req, res) => {
   try {
     const { dateFrom, dateTo, vehicleId, gateId, status, page = 1, limit = 20 } = req.query;
-    const offset = (parseInt(page) - 1) * parseInt(limit);
+    // Bounded integers — inlined into the SQL (some MySQL servers reject
+    // placeholder LIMIT/OFFSET in prepared statements). Safe: not user strings.
+    const lim = Math.min(Math.max(parseInt(limit) || 20, 1), 100);
+    const off = Math.max((parseInt(page) - 1) * lim, 0);
 
     // Get user's account
     const accounts = await query('SELECT AccountID FROM Accounts WHERE UserID = ?', [req.user.userId]);
@@ -57,8 +60,7 @@ router.get('/', async (req, res) => {
     const total = countResult[0].total;
 
     // Add sorting and pagination
-    sql += ' ORDER BY t.TransactionDateTime DESC LIMIT ? OFFSET ?';
-    params.push(parseInt(limit), offset);
+    sql += ` ORDER BY t.TransactionDateTime DESC LIMIT ${lim} OFFSET ${off}`;
 
     const transactions = await query(sql, params);
 
