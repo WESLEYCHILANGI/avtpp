@@ -8,25 +8,25 @@
 
 /* ── CSS Custom Properties ── */
 :root {
-  /* Primary — AVTPP Green */
-  --primary-900: #052e16;
-  --primary-800: #064e29;
-  --primary-700: #15803d;
-  --primary-600: #16a34a;
-  --primary-500: #22c55e;
-  --primary-400: #4ade80;
-  --primary-300: #86efac;
-  --primary-200: #bbf7d0;
-  --primary-100: #dcfce7;
-  --primary-50: #f0fdf4;
+  /* Primary — Professional Slate Grey */
+  --primary-900: #0f172a;
+  --primary-800: #1e293b;
+  --primary-700: #334155;
+  --primary-600: #475569;
+  --primary-500: #64748b;
+  --primary-400: #94a3b8;
+  --primary-300: #cbd5e1;
+  --primary-200: #e2e8f0;
+  --primary-100: #eef2f6;
+  --primary-50: #f8fafc;
 
-  /* Accent — Brighter Green (highlights) */
-  --accent-600: #15803d;
-  --accent-500: #4ade80;
-  --accent-400: #86efac;
-  --accent-300: #bbf7d0;
-  --accent-200: #dcfce7;
-  --accent-100: #f0fdf4;
+  /* Accent — Slate (subtle highlights) */
+  --accent-600: #475569;
+  --accent-500: #64748b;
+  --accent-400: #94a3b8;
+  --accent-300: #cbd5e1;
+  --accent-200: #e2e8f0;
+  --accent-100: #f1f5f9;
 
   /* Success — Emerald */
   --success-600: #059669;
@@ -73,7 +73,7 @@
   --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.08), 0 2px 4px -2px rgba(0,0,0,0.05);
   --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.05);
   --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.05);
-  --shadow-glow: 0 0 20px rgba(22, 163, 74, 0.18);
+  --shadow-glow: 0 0 20px rgba(15, 23, 42, 0.12);
 
   /* Transitions */
   --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -134,8 +134,8 @@ a:hover { color: var(--primary-400); }
   left: -50%;
   width: 200%;
   height: 200%;
-  background: radial-gradient(circle at 30% 70%, rgba(134, 239, 172, 0.12) 0%, transparent 50%),
-              radial-gradient(circle at 70% 30%, rgba(255,255,255,0.05) 0%, transparent 50%);
+  background: radial-gradient(circle at 30% 70%, rgba(255,255,255,0.07) 0%, transparent 50%),
+              radial-gradient(circle at 70% 30%, rgba(148,163,184,0.10) 0%, transparent 50%);
   animation: authBgFloat 20s ease-in-out infinite;
 }
 
@@ -194,7 +194,7 @@ a:hover { color: var(--primary-400); }
   margin: 0 auto 12px;
   font-size: 1.5rem;
   color: white;
-  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.25);
 }
 
 /* ── Form Elements ── */
@@ -227,7 +227,7 @@ a:hover { color: var(--primary-400); }
 
 .form-input:focus {
   border-color: var(--primary-400);
-  box-shadow: 0 0 0 3px rgba(42, 78, 138, 0.12);
+  box-shadow: 0 0 0 3px rgba(100, 116, 139, 0.18);
 }
 
 .form-input::placeholder {
@@ -271,7 +271,7 @@ a:hover { color: var(--primary-400); }
 
 .form-select:focus {
   border-color: var(--primary-400);
-  box-shadow: 0 0 0 3px rgba(42, 78, 138, 0.12);
+  box-shadow: 0 0 0 3px rgba(100, 116, 139, 0.18);
 }
 
 .form-row {
@@ -316,18 +316,18 @@ a:hover { color: var(--primary-400); }
 }
 
 .btn-primary {
-  background: var(--primary-600);
+  background: var(--primary-800);
   color: #fff;
 }
 
-.btn-primary:hover:not(:disabled) { background: var(--primary-700); }
+.btn-primary:hover:not(:disabled) { background: var(--primary-900); }
 
 .btn-accent {
-  background: var(--primary-600);
+  background: var(--primary-700);
   color: #fff;
 }
 
-.btn-accent:hover:not(:disabled) { background: var(--primary-700); }
+.btn-accent:hover:not(:disabled) { background: var(--primary-800); }
 
 .btn-success {
   background: var(--success-600);
@@ -461,7 +461,7 @@ a:hover { color: var(--primary-400); }
 }
 
 .sidebar-link.active {
-  background: linear-gradient(135deg, rgba(212, 168, 67, 0.2), rgba(212, 168, 67, 0.08));
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.06));
   color: var(--accent-300);
   font-weight: 600;
 }
@@ -880,7 +880,7 @@ a:hover { color: var(--primary-400); }
 .alert-info {
   background: var(--primary-50);
   color: var(--primary-600);
-  border: 1px solid rgba(42, 78, 138, 0.15);
+  border: 1px solid rgba(100, 116, 139, 0.18);
 }
 
 .alert-success {
@@ -1944,12 +1944,12 @@ a:hover { color: var(--primary-400); }
 [data-theme="dark"] .badge-success { background: rgba(34,197,94,0.18); color: #4ade80; }
 [data-theme="dark"] .badge-danger { background: rgba(239,68,68,0.18); color: #f87171; }
 [data-theme="dark"] .badge-warning { background: rgba(245,158,11,0.18); color: #fbbf24; }
-[data-theme="dark"] .badge-primary { background: rgba(34,197,94,0.18); color: #86efac; }
+[data-theme="dark"] .badge-primary { background: rgba(148,163,184,0.20); color: #cbd5e1; }
 [data-theme="dark"] .alert-success { background: rgba(34,197,94,0.14); color: #86efac; border-color: rgba(34,197,94,0.3); }
 [data-theme="dark"] .alert-danger { background: rgba(239,68,68,0.14); color: #fca5a5; border-color: rgba(239,68,68,0.3); }
 [data-theme="dark"] .alert-warning { background: rgba(245,158,11,0.14); color: #fcd34d; border-color: rgba(245,158,11,0.3); }
-[data-theme="dark"] .alert-info { background: rgba(34,197,94,0.12); color: #a7f3d0; border-color: rgba(34,197,94,0.25); }
-[data-theme="dark"] .vehicle-plate { background: rgba(34,197,94,0.14); color: #86efac; border-color: rgba(34,197,94,0.3); }
+[data-theme="dark"] .alert-info { background: rgba(148,163,184,0.12); color: #cbd5e1; border-color: rgba(148,163,184,0.25); }
+[data-theme="dark"] .vehicle-plate { background: rgba(148,163,184,0.14); color: #e2e8f0; border-color: rgba(148,163,184,0.30); }
 
 /* ══════════════════════════════════════════════
    ONBOARDING TOUR
