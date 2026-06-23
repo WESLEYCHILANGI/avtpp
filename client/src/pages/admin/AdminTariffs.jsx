@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import api from '../../services/api';
+import ActionMenu from '../../components/ActionMenu';
 
 const CLASS_LABELS = {
   Class1_Motorcycle: { label: 'Class 1 — Motorcycle' },
@@ -167,13 +168,9 @@ export default function AdminTariffs() {
                               </button>
                             </div>
                           ) : (
-                            <button
-                              className="btn btn-outline btn-sm"
-                              onClick={() => startEdit(t)}
-                              style={{ fontSize: '0.72rem', padding: '4px 10px' }}
-                            >
-                              Edit
-                            </button>
+                            <ActionMenu items={[
+                              { label: 'Edit rate', onClick: () => startEdit(t) },
+                            ]} />
                           )}
                         </td>
                       </tr>

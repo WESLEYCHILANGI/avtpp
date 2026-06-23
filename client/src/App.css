@@ -2038,3 +2038,62 @@ a:hover { color: var(--primary-400); }
   justify-content: space-between;
   gap: 10px;
 }
+
+/* ══════════════════════════════════════════════
+   ACTION MENU (kebab / 3-dot)
+   ══════════════════════════════════════════════ */
+.action-menu { display: inline-block; position: relative; }
+
+.action-menu-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-md);
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--gray-500);
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.action-menu-trigger:hover,
+.action-menu-trigger[aria-expanded="true"] {
+  background: var(--gray-100);
+  color: var(--gray-800);
+  border-color: var(--gray-200);
+}
+
+.action-menu-dropdown {
+  position: fixed;
+  z-index: 300;
+  min-width: 170px;
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  padding: 4px;
+  animation: notifSlide 0.15s ease-out;
+}
+
+.action-menu-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 9px 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--gray-700);
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-family: inherit;
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.action-menu-item:hover:not(:disabled) { background: var(--gray-100); color: var(--gray-900); }
+.action-menu-item.danger { color: var(--danger-600); }
+.action-menu-item.danger:hover:not(:disabled) { background: var(--danger-100); }
+.action-menu-item:disabled { opacity: 0.5; cursor: not-allowed; }

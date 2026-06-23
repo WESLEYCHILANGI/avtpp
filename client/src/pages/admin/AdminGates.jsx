@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import api from '../../services/api';
+import ActionMenu from '../../components/ActionMenu';
 
 const PROVINCES = [
   'Lusaka', 'Copperbelt', 'Central', 'Southern', 'Northern',
@@ -132,17 +133,14 @@ export default function AdminGates() {
                         </span>
                       </td>
                       <td>
-                        <div style={{ display: 'flex', gap: '6px' }}>
-                          <button className="btn btn-outline btn-sm" onClick={() => openEdit(g)}
-                            style={{ fontSize: '0.72rem', padding: '4px 10px' }}>Edit</button>
-                          <button
-                            className={`btn btn-sm ${g.IsActive ? 'btn-danger' : 'btn-success'}`}
-                            onClick={() => toggleActive(g)}
-                            style={{ fontSize: '0.72rem', padding: '4px 10px' }}
-                          >
-                            {g.IsActive ? 'Deactivate' : 'Activate'}
-                          </button>
-                        </div>
+                        <ActionMenu items={[
+                          { label: 'Edit', onClick: () => openEdit(g) },
+                          {
+                            label: g.IsActive ? 'Deactivate' : 'Activate',
+                            danger: g.IsActive,
+                            onClick: () => toggleActive(g),
+                          },
+                        ]} />
                       </td>
                     </tr>
                   ))}

@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import api from '../../services/api';
 import { formatDate } from '../../utils/format';
+import ActionMenu from '../../components/ActionMenu';
 
 export default function AdminUsers() {
   const [users, setUsers] = useState([]);
@@ -154,23 +155,15 @@ export default function AdminUsers() {
                         </span>
                       </td>
                       <td>
-                        <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-                          <button
-                            className={`btn btn-sm ${u.IsActive ? 'btn-danger' : 'btn-success'}`}
-                            onClick={() => toggleStatus(u.UserID, u.IsActive)}
-                            disabled={toggling === u.UserID}
-                            style={{ fontSize: '0.72rem', padding: '4px 10px' }}
-                          >
-                            {toggling === u.UserID ? '...' : u.IsActive ? 'Suspend' : 'Activate'}
-                          </button>
-                          <button
-                            className="btn btn-outline btn-sm"
-                            onClick={() => openResetModal(u)}
-                            style={{ fontSize: '0.72rem', padding: '4px 10px' }}
-                          >
-                            Reset Password
-                          </button>
-                        </div>
+                        <ActionMenu items={[
+                          {
+                            label: u.IsActive ? 'Suspend' : 'Activate',
+                            danger: u.IsActive,
+                            disabled: toggling === u.UserID,
+                            onClick: () => toggleStatus(u.UserID, u.IsActive),
+                          },
+                          { label: 'Reset Password', onClick: () => openResetModal(u) },
+                        ]} />
                       </td>
                     </tr>
                   ))}

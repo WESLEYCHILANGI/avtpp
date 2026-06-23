@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import api from '../services/api';
+import ActionMenu from '../components/ActionMenu';
 
 const CLASSES = [
   { value: 'Class1_Motorcycle', label: 'Class 1 — Motorcycle (K20)' },
@@ -115,10 +116,10 @@ export default function Vehicles() {
                       <td>{(CLASSES.find(c => c.value === v.VehicleClass)?.label || v.VehicleClass).split('(')[0].trim()}</td>
                       <td><span className="badge badge-success">Active</span></td>
                       <td>
-                        <div style={{ display: 'flex', gap: '8px' }}>
-                          <button className="btn btn-outline btn-sm" onClick={() => openEdit(v)}>Edit</button>
-                          <button className="btn btn-danger btn-sm" onClick={() => handleDelete(v.VehicleID)}>Remove</button>
-                        </div>
+                        <ActionMenu items={[
+                          { label: 'Edit', onClick: () => openEdit(v) },
+                          { label: 'Remove', danger: true, onClick: () => handleDelete(v.VehicleID) },
+                        ]} />
                       </td>
                     </tr>
                   ))}
