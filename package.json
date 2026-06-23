@@ -1,0 +1,14 @@
+{
+  "name": "avtpp",
+  "version": "1.0.0",
+  "description": "Automated Vehicle Toll Payment and Request Platform — full stack (Express API + React client)",
+  "private": true,
+  "scripts": {
+    "build": "npm --prefix client ci && npm --prefix client run build && npm --prefix server ci",
+    "start": "npm --prefix server start",
+    "seed": "npm --prefix server run seed"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
