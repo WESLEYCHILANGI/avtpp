@@ -1,7 +1,12 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 import api from '../services/api';
 
 const AuthContext = createContext(null);
+
+function readStoredTheme() {
+  const t = localStorage.getItem('avtpp_theme');
+  return t === 'dark' ? 'dark' : 'light';
+}
 
 // Read a persisted session synchronously so the correct auth state is available
 // on the first render (avoids a redirect flash and a setState-in-effect).
@@ -24,6 +29,25 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => readStoredSession('avtpp_token', 'avtpp_user'));
   const [admin, setAdmin] = useState(() => readStoredSession('avtpp_admin_token', 'avtpp_admin'));
   const [loading] = useState(false);
+  const [theme, setThemeState] = useState(readStoredTheme);
+
+  // Apply + persist theme whenever it changes
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    localStorage.setItem('avtpp_theme', theme);
+  }, [theme]);
+
+  const setTheme = (t) => setThemeState(t === 'dark' ? 'dark' : 'light');
+  const toggleTheme = () => setThemeState(t => (t === 'dark' ? 'light' : 'dark'));
+
+  // Merge partial changes into the current user and persist them
+  const updateUser = (partial) => {
+    setUser(prev => {
+      const next = { ...(prev || {}), ...partial };
+      localStorage.setItem('avtpp_user', JSON.stringify(next));
+      return next;
+    });
+  };
 
   const login = async (email, password) => {
     const res = await api.post('/auth/login', { email, password });
@@ -62,7 +86,7 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, admin, loading, login, register, logout, adminLogin, adminLogout }}>
+    <AuthContext.Provider value={{ user, admin, loading, login, register, logout, adminLogin, adminLogout, updateUser, theme, setTheme, toggleTheme }}>
       {children}
     </AuthContext.Provider>
   );

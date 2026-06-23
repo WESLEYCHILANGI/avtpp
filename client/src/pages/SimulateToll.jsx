@@ -63,10 +63,8 @@ export default function SimulateToll() {
 
   return (
     <div style={{ maxWidth: '600px', margin: '0 auto' }}>
-      <div className="alert alert-info" style={{ marginBottom: '20px' }}>
-        <strong>Toll Simulation Mode</strong> — Simulate an automated toll passage and deduction.
-        Use <strong>My Vehicle</strong> for a self-service test, or <strong>Gate Scan</strong> to emulate a
-        roadside device reading a licence plate at the barrier.
+      <div className="alert alert-info" style={{ marginBottom: '16px' }}>
+        <strong>Toll Simulation</strong> — choose <strong>My Vehicle</strong> (self-service) or <strong>Gate Scan</strong> (reads a plate at the barrier).
       </div>
 
       {/* Mode toggle */}

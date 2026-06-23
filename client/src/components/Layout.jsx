@@ -10,8 +10,9 @@ const USER_NAV = [
   { to: '/history', label: 'Payment History', section: 'Payments' },
   { to: '/vehicles', label: 'My Vehicles', section: 'Vehicles' },
   { to: '/simulate', label: 'Simulate Toll', section: 'Tools' },
+  { to: '/settings', label: 'Settings', section: 'Account' },
 ];
-const USER_SECTIONS = ['Overview', 'Payments', 'Vehicles', 'Tools'];
+const USER_SECTIONS = ['Overview', 'Payments', 'Vehicles', 'Tools', 'Account'];
 
 const ADMIN_NAV = [
   { to: '/admin', label: 'Dashboard', end: true, section: 'Overview' },
@@ -28,6 +29,7 @@ const PAGE_TITLES = {
   '/history': 'Payment History',
   '/vehicles': 'My Vehicles',
   '/simulate': 'Simulate Toll',
+  '/settings': 'Settings',
   '/admin': 'Admin Dashboard',
   '/admin/users': 'User Management',
   '/admin/gates': 'Toll Gate Management',
@@ -124,6 +126,7 @@ export default function Layout({ children, isAdmin = false }) {
     : `${user?.firstName || ''} ${user?.lastName || ''}`.trim() || 'User';
   const displayEmail = (isAdmin ? admin?.email : user?.email) || '';
   const initials = displayName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+  const avatarPic = !isAdmin ? (user?.profilePicture || null) : null;
 
   const nav = isAdmin ? ADMIN_NAV : USER_NAV;
   const sections = isAdmin ? ADMIN_SECTIONS : USER_SECTIONS;
@@ -165,7 +168,9 @@ export default function Layout({ children, isAdmin = false }) {
 
         <div className="sidebar-footer">
           <div className="sidebar-user">
-            <div className="sidebar-avatar">{initials}</div>
+            {avatarPic
+              ? <img src={avatarPic} alt="" className="sidebar-avatar avatar-img" />
+              : <div className="sidebar-avatar">{initials}</div>}
             <div className="sidebar-user-info">
               <div className="sidebar-user-name">{displayName}</div>
               <div className="sidebar-user-email">{displayEmail}</div>
@@ -239,13 +244,15 @@ export default function Layout({ children, isAdmin = false }) {
             )}
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <div className="sidebar-avatar" style={{
-                width: '32px', height: '32px', fontSize: '0.75rem',
-                background: 'linear-gradient(135deg, var(--primary-700), var(--primary-500))',
-                color: 'white',
-              }}>
-                {initials}
-              </div>
+              {avatarPic
+                ? <img src={avatarPic} alt="" className="sidebar-avatar avatar-img" style={{ width: '32px', height: '32px' }} />
+                : <div className="sidebar-avatar" style={{
+                    width: '32px', height: '32px', fontSize: '0.75rem',
+                    background: 'linear-gradient(135deg, var(--primary-700), var(--primary-500))',
+                    color: 'white',
+                  }}>
+                    {initials}
+                  </div>}
               <span className="header-username">{displayName}</span>
             </div>
           </div>

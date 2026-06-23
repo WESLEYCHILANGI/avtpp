@@ -19,7 +19,8 @@ CREATE TABLE IF NOT EXISTS Users (
     DateRegistered DATETIME DEFAULT CURRENT_TIMESTAMP,
     IsActive BOOLEAN DEFAULT TRUE,
     FailedLoginAttempts INT DEFAULT 0,
-    LockedUntil DATETIME DEFAULT NULL
+    LockedUntil DATETIME DEFAULT NULL,
+    ProfilePicture MEDIUMTEXT DEFAULT NULL
 ) ENGINE=InnoDB;
 
 -- ── ACCOUNTS (1:1 with Users) ──

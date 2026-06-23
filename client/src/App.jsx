@@ -7,11 +7,13 @@ import { ProtectedRoute, AdminProtectedRoute, GuestRoute } from './components/Pr
 // User Pages
 import Login from './pages/Login';
 import Register from './pages/Register';
+import ForgotPassword from './pages/ForgotPassword';
 import Dashboard from './pages/Dashboard';
 import TopUp from './pages/TopUp';
 import PaymentHistory from './pages/PaymentHistory';
 import Vehicles from './pages/Vehicles';
 import SimulateToll from './pages/SimulateToll';
+import Settings from './pages/Settings';
 
 // Admin Pages
 import AdminLogin from './pages/admin/AdminLogin';
@@ -41,6 +43,14 @@ function App() {
         element={
           <GuestRoute>
             <Register />
+          </GuestRoute>
+        }
+      />
+      <Route
+        path="/forgot-password"
+        element={
+          <GuestRoute>
+            <ForgotPassword />
           </GuestRoute>
         }
       />
@@ -92,6 +102,16 @@ function App() {
           <ProtectedRoute>
             <Layout>
               <SimulateToll />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/settings"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <Settings />
             </Layout>
           </ProtectedRoute>
         }

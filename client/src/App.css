@@ -91,6 +91,13 @@
 html {
   font-size: 16px;
   scroll-behavior: smooth;
+  /* Clip horizontal overflow (e.g. the off-canvas mobile sidebar at translateX(-100%))
+     so no screen size ever gets an accidental sideways scrollbar. */
+  overflow-x: hidden;
+}
+
+@supports (overflow: clip) {
+  html { overflow-x: clip; }
 }
 
 body {
@@ -337,7 +344,7 @@ a:hover { color: var(--primary-400); }
 .btn-danger:hover:not(:disabled) { background: #b91c1c; }
 
 .btn-outline {
-  background: #fff;
+  background: var(--white);
   border-color: var(--gray-300);
   color: var(--gray-700);
 }
@@ -1351,7 +1358,7 @@ a:hover { color: var(--primary-400); }
 }
 
 .modal {
-  background: white;
+  background: var(--white);
   border-radius: var(--radius-lg);
   width: 100%;
   max-width: 540px;
@@ -1430,7 +1437,7 @@ a:hover { color: var(--primary-400); }
   padding: 10px 14px;
   border: 1px solid var(--gray-200);
   border-radius: var(--radius-md);
-  background: white;
+  background: var(--white);
   font-size: 0.88rem;
   font-family: inherit;
   color: var(--gray-800);
@@ -1452,7 +1459,7 @@ a:hover { color: var(--primary-400); }
   gap: 14px;
   align-items: flex-end;
   padding: 18px 22px;
-  background: white;
+  background: var(--white);
   border-radius: var(--radius-lg);
   border: 1px solid var(--gray-100);
   box-shadow: var(--shadow-sm);
@@ -1493,7 +1500,7 @@ a:hover { color: var(--primary-400); }
 .pagination button {
   padding: 6px 14px;
   border: 1px solid var(--gray-200);
-  background: white;
+  background: var(--white);
   border-radius: var(--radius-md);
   font-size: 0.82rem;
   font-weight: 500;
@@ -1529,6 +1536,7 @@ a:hover { color: var(--primary-400); }
 
 /* ── Alert Info ── */
 .alert-info {
+  display: block; /* override the base .alert flex so rich text flows as one paragraph */
   background: var(--primary-50);
   border: 1px solid var(--primary-100);
   color: var(--primary-700);
@@ -1562,7 +1570,7 @@ a:hover { color: var(--primary-400); }
 }
 
 .btn-outline {
-  background: white;
+  background: var(--white);
   color: var(--gray-700);
   border: 1px solid var(--gray-300);
 }
@@ -1781,6 +1789,19 @@ a:hover { color: var(--primary-400); }
   .data-table td { padding: 11px 12px; font-size: 0.82rem; }
 }
 
+/* On mobile the notification panel spans the screen (with margins) and is
+   anchored to the viewport, not to the bell — fixes misalignment/overflow. */
+@media (max-width: 768px) {
+  .notification-panel {
+    position: fixed;
+    top: calc(var(--header-height) + 4px);
+    left: 12px;
+    right: 12px;
+    width: auto;
+    max-height: calc(100dvh - var(--header-height) - 24px);
+  }
+}
+
 @media (max-width: 640px) {
   .page-content { padding: 16px; }
   .topbar { padding: 0 14px; }
@@ -1825,3 +1846,107 @@ a:hover { color: var(--primary-400); }
 @media (max-width: 768px) {
   .dashboard-hero { grid-template-columns: 1fr; }
 }
+
+/* ══════════════════════════════════════════════
+   AVATARS (profile picture) + SETTINGS
+   ══════════════════════════════════════════════ */
+.avatar-img {
+  object-fit: cover;
+  display: block;
+}
+
+.avatar-lg {
+  width: 88px;
+  height: 88px;
+  border-radius: var(--radius-full);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.avatar-lg.avatar-initials {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, var(--primary-700), var(--primary-500));
+}
+
+.theme-options {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.theme-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--radius-md);
+  background: var(--white);
+  color: var(--gray-700);
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.theme-option:hover { border-color: var(--primary-400); }
+
+.theme-option.active {
+  border-color: var(--primary-500);
+  background: var(--primary-50);
+  color: var(--primary-700);
+}
+
+.theme-swatch {
+  width: 22px;
+  height: 22px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--gray-300);
+}
+
+.swatch-light { background: #ffffff; }
+.swatch-dark { background: #11151c; }
+
+/* ══════════════════════════════════════════════
+   DARK THEME — remap neutral ramp; green accents stay
+   ══════════════════════════════════════════════ */
+[data-theme="dark"] {
+  --white: #1a1f27;
+  --gray-50: #11151c;
+  --gray-100: #232a34;
+  --gray-200: #2d3540;
+  --gray-300: #3a4350;
+  --gray-400: #6b7480;
+  --gray-500: #8a93a0;
+  --gray-600: #aab2bd;
+  --gray-700: #c7cdd6;
+  --gray-800: #e4e8ee;
+  --gray-900: #f5f7fa;
+
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.4);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.5), 0 2px 4px -2px rgba(0,0,0,0.4);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.55), 0 4px 6px -4px rgba(0,0,0,0.4);
+  --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.6), 0 8px 10px -6px rgba(0,0,0,0.45);
+}
+
+[data-theme="dark"] body {
+  background: var(--gray-50);
+  color: var(--gray-800);
+}
+
+/* Keep status chips legible on dark surfaces */
+[data-theme="dark"] .badge-success { background: rgba(34,197,94,0.18); color: #4ade80; }
+[data-theme="dark"] .badge-danger { background: rgba(239,68,68,0.18); color: #f87171; }
+[data-theme="dark"] .badge-warning { background: rgba(245,158,11,0.18); color: #fbbf24; }
+[data-theme="dark"] .badge-primary { background: rgba(34,197,94,0.18); color: #86efac; }
+[data-theme="dark"] .alert-success { background: rgba(34,197,94,0.14); color: #86efac; border-color: rgba(34,197,94,0.3); }
+[data-theme="dark"] .alert-danger { background: rgba(239,68,68,0.14); color: #fca5a5; border-color: rgba(239,68,68,0.3); }
+[data-theme="dark"] .alert-warning { background: rgba(245,158,11,0.14); color: #fcd34d; border-color: rgba(245,158,11,0.3); }
+[data-theme="dark"] .alert-info { background: rgba(34,197,94,0.12); color: #a7f3d0; border-color: rgba(34,197,94,0.25); }
+[data-theme="dark"] .vehicle-plate { background: rgba(34,197,94,0.14); color: #86efac; border-color: rgba(34,197,94,0.3); }

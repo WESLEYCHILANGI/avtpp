@@ -12,5 +12,6 @@ client/dist/
 
 # Logs & OS files
 *.log
+logs/
 .DS_Store
 Thumbs.db

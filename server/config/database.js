@@ -76,12 +76,30 @@ async function initializeDatabase() {
     const schemaPath = path.join(__dirname, '..', 'models', 'schema.sql');
     const schema = fs.readFileSync(schemaPath, 'utf8');
     await conn.query(schema);
+    await ensureColumns(conn);
     console.log('✅ Database schema initialized successfully');
   } catch (err) {
     console.error('❌ Database initialization error:', err.message);
     throw err;
   } finally {
     await conn.end();
+  }
+}
+
+// Idempotently add columns that may be missing on pre-existing databases
+// (CREATE TABLE IF NOT EXISTS won't alter an existing table).
+async function ensureColumns(conn) {
+  const statements = [
+    'ALTER TABLE Users ADD COLUMN ProfilePicture MEDIUMTEXT DEFAULT NULL',
+  ];
+  for (const sql of statements) {
+    try {
+      await conn.query(sql);
+    } catch (err) {
+      if (err.code !== 'ER_DUP_FIELDNAME') {
+        console.log('ℹ️  ensureColumns:', err.code || err.message);
+      }
+    }
   }
 }
 

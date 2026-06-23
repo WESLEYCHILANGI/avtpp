@@ -72,6 +72,10 @@ export default function Login() {
             </div>
           </div>
 
+          <div style={{ textAlign: 'right', marginBottom: '16px', marginTop: '-6px' }}>
+            <Link to="/forgot-password" style={{ fontSize: '0.82rem', fontWeight: 600 }}>Forgot password?</Link>
+          </div>
+
           <button type="submit" className="btn btn-primary btn-full btn-lg" disabled={loading} id="login-submit">
             {loading ? 'Signing in...' : 'Sign In'}
           </button>
