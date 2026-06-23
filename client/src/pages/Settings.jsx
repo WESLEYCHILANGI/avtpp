@@ -269,6 +269,17 @@ export default function Settings() {
           </button>
         </form>
       </Section>
+
+      {/* Help */}
+      <Section title="Help" description="New here, or need a refresher?">
+        <button
+          type="button"
+          className="btn btn-outline"
+          onClick={() => window.dispatchEvent(new Event('avtpp:start-tour'))}
+        >
+          Replay platform tour
+        </button>
+      </Section>
     </div>
   );
 }

@@ -61,6 +61,7 @@ export function AuthProvider({ children }) {
     const res = await api.post('/auth/register', data);
     localStorage.setItem('avtpp_token', res.data.token);
     localStorage.setItem('avtpp_user', JSON.stringify(res.data.user));
+    localStorage.setItem('avtpp_tour_pending', '1'); // show the welcome tour on first load
     setUser(res.data.user);
     return res.data;
   };

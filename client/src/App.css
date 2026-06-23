@@ -1950,3 +1950,91 @@ a:hover { color: var(--primary-400); }
 [data-theme="dark"] .alert-warning { background: rgba(245,158,11,0.14); color: #fcd34d; border-color: rgba(245,158,11,0.3); }
 [data-theme="dark"] .alert-info { background: rgba(34,197,94,0.12); color: #a7f3d0; border-color: rgba(34,197,94,0.25); }
 [data-theme="dark"] .vehicle-plate { background: rgba(34,197,94,0.14); color: #86efac; border-color: rgba(34,197,94,0.3); }
+
+/* ══════════════════════════════════════════════
+   ONBOARDING TOUR
+   ══════════════════════════════════════════════ */
+.tour-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 20px;
+  animation: fadeIn 0.2s ease;
+}
+
+.tour-card {
+  background: var(--white);
+  color: var(--gray-800);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  width: 100%;
+  max-width: 440px;
+  padding: 28px;
+  animation: slideUp 0.25s ease;
+}
+
+.tour-step-count {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--primary-600);
+  margin-bottom: 8px;
+}
+
+.tour-title {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--gray-900);
+  margin-bottom: 8px;
+}
+
+.tour-body {
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--gray-600);
+}
+
+.tour-where {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 5px 12px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--primary-700);
+  background: var(--primary-50);
+  border: 1px solid var(--primary-100);
+  border-radius: var(--radius-full);
+}
+
+.tour-dots {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  margin: 22px 0 18px;
+}
+
+.tour-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: var(--radius-full);
+  background: var(--gray-300);
+  transition: background var(--transition-fast), width var(--transition-fast);
+}
+
+.tour-dot.active {
+  width: 20px;
+  background: var(--primary-500);
+}
+
+.tour-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}

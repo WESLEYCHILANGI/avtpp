@@ -3,6 +3,7 @@ import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 import { formatDateTime } from '../utils/format';
+import OnboardingTour from './OnboardingTour';
 
 const USER_NAV = [
   { to: '/dashboard', label: 'Dashboard', end: true, section: 'Overview' },
@@ -59,6 +60,24 @@ export default function Layout({ children, isAdmin = false }) {
   const location = useLocation();
   const navigate = useNavigate();
   const notifRef = useRef(null);
+  const [showTour, setShowTour] = useState(false);
+
+  // Auto-show the welcome tour for newly registered users; allow manual replay.
+  useEffect(() => {
+    if (isAdmin) return;
+    if (localStorage.getItem('avtpp_tour_pending') === '1') {
+      localStorage.removeItem('avtpp_tour_pending');
+      setShowTour(true);
+    }
+    const onStart = () => setShowTour(true);
+    window.addEventListener('avtpp:start-tour', onStart);
+    return () => window.removeEventListener('avtpp:start-tour', onStart);
+  }, [isAdmin]);
+
+  const closeTour = () => {
+    setShowTour(false);
+    localStorage.setItem('avtpp_tour_seen', '1');
+  };
 
   const loadNotifications = useCallback(async () => {
     try {
@@ -262,6 +281,8 @@ export default function Layout({ children, isAdmin = false }) {
           {children}
         </div>
       </div>
+
+      {showTour && <OnboardingTour onClose={closeTour} />}
     </div>
   );
 }
