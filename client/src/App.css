@@ -2097,3 +2097,7 @@ a:hover { color: var(--primary-400); }
 .action-menu-item.danger { color: var(--danger-600); }
 .action-menu-item.danger:hover:not(:disabled) { background: var(--danger-100); }
 .action-menu-item:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Right-align the actions column so the kebab sits at the far right */
+.data-table td:has(.action-menu) { text-align: right; }
+.data-table th.col-actions { text-align: right; }

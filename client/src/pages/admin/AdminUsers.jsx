@@ -136,7 +136,7 @@ export default function AdminUsers() {
                     <th>Phone</th>
                     <th>Registered</th>
                     <th>Status</th>
-                    <th>Actions</th>
+                    <th className="col-actions">Actions</th>
                   </tr>
                 </thead>
                 <tbody>

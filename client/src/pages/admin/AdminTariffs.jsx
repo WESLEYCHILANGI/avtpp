@@ -112,7 +112,7 @@ export default function AdminTariffs() {
                   <tr>
                     <th>Vehicle Class</th>
                     <th>Current Rate (ZMW)</th>
-                    <th>Action</th>
+                    <th className="col-actions">Action</th>
                   </tr>
                 </thead>
                 <tbody>

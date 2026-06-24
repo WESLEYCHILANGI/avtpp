@@ -115,7 +115,7 @@ export default function AdminGates() {
                     <th>Route</th>
                     <th>Province</th>
                     <th>Status</th>
-                    <th>Actions</th>
+                    <th className="col-actions">Actions</th>
                   </tr>
                 </thead>
                 <tbody>

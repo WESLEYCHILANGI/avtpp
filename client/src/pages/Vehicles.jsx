@@ -101,7 +101,7 @@ export default function Vehicles() {
                     <th>Make / Model</th>
                     <th>Class</th>
                     <th>Status</th>
-                    <th>Actions</th>
+                    <th className="col-actions">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
