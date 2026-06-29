@@ -74,14 +74,15 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Internal server error.' });
 });
 
-// ── Start Server ──
-async function start() {
+// ── Database init + seed, with retries (does NOT block/crash the server) ──
+// The HTTP server starts immediately so health checks and the frontend stay up
+// even if the database is temporarily unavailable (e.g. a free-tier DB that has
+// paused after inactivity). The DB is connected in the background and retried.
+async function initDatabaseWithRetry(attempt = 1) {
   try {
     await initializeDatabase();
     console.log('✅ Database connected and initialized');
 
-    // Auto-seed reference data (toll gates, tariffs, admin, demo user) on a
-    // fresh database. Idempotent + opt-out via SEED_ON_START=false.
     if (process.env.SEED_ON_START !== 'false') {
       try {
         const rows = await query('SELECT COUNT(*) AS c FROM TollGates');
@@ -93,16 +94,21 @@ async function start() {
         console.error('⚠️  Auto-seed skipped:', seedErr.message);
       }
     }
-
-    app.listen(PORT, () => {
-      console.log(`\n🚀 AVTPP Server running on http://localhost:${PORT}`);
-      console.log(`📋 API Health: http://localhost:${PORT}/api/health`);
-      console.log(`🔑 Environment: ${process.env.FLUTTERWAVE_LIVE === 'true' ? 'LIVE' : 'SIMULATION'} mode\n`);
-    });
   } catch (err) {
-    console.error('❌ Server failed to start:', err);
-    process.exit(1);
+    const delay = Math.min(30000, attempt * 5000);
+    console.error(`❌ Database init failed (attempt ${attempt}): ${err.message}. Retrying in ${delay / 1000}s.`);
+    setTimeout(() => initDatabaseWithRetry(attempt + 1), delay);
   }
+}
+
+// ── Start Server ──
+function start() {
+  app.listen(PORT, () => {
+    console.log(`\n🚀 AVTPP Server running on http://localhost:${PORT}`);
+    console.log(`📋 API Health: http://localhost:${PORT}/api/health`);
+    console.log(`🔑 Environment: ${process.env.FLUTTERWAVE_LIVE === 'true' ? 'LIVE' : 'SIMULATION'} mode\n`);
+  });
+  initDatabaseWithRetry();
 }
 
 start();
