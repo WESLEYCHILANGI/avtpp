@@ -12,15 +12,22 @@ let pool;
 //   4. Local defaults
 function getDbConfig() {
   const url = process.env.DATABASE_URL || process.env.MYSQL_URL;
-  if (url) {
-    const u = new URL(url);
-    return {
-      host: u.hostname,
-      port: u.port ? parseInt(u.port) : 3306,
-      user: decodeURIComponent(u.username),
-      password: decodeURIComponent(u.password),
-      database: u.pathname.replace(/^\//, ''),
-    };
+  // Only treat it as a connection URL if it actually looks like one. A bare
+  // host (e.g. "gateway01...tidbcloud.com") is NOT usable here — fall back to
+  // the discrete DB_* vars instead of crashing.
+  if (url && /^[a-z]+:\/\//i.test(url)) {
+    try {
+      const u = new URL(url);
+      return {
+        host: u.hostname,
+        port: u.port ? parseInt(u.port) : 3306,
+        user: decodeURIComponent(u.username),
+        password: decodeURIComponent(u.password),
+        database: u.pathname.replace(/^\//, ''),
+      };
+    } catch (e) {
+      console.error('Invalid DATABASE_URL — falling back to DB_* vars:', e.message);
+    }
   }
   return {
     host: process.env.DB_HOST || process.env.MYSQLHOST || 'localhost',
