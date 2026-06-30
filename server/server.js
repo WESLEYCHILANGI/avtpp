@@ -83,15 +83,14 @@ async function initDatabaseWithRetry(attempt = 1) {
     await initializeDatabase();
     console.log('✅ Database connected and initialized');
 
+    // Seed reference data. The seed is fully idempotent (each gate/admin/user is
+    // checked before insert), so running it every boot safely fills in anything
+    // missing and self-heals a partially-seeded database.
     if (process.env.SEED_ON_START !== 'false') {
       try {
-        const rows = await query('SELECT COUNT(*) AS c FROM TollGates');
-        if (rows[0].c === 0) {
-          console.log('🌱 Empty database detected — seeding initial data...');
-          await seed();
-        }
+        await seed();
       } catch (seedErr) {
-        console.error('⚠️  Auto-seed skipped:', seedErr.message);
+        console.error('⚠️  Auto-seed error:', seedErr.message);
       }
     }
   } catch (err) {
