@@ -1,10 +1,12 @@
 const express = require('express');
 const cors = require('cors');
+const helmet = require('helmet');
 const path = require('path');
 require('dotenv').config();
 
 const { initializeDatabase, query } = require('./config/database');
 const { seed } = require('./seeds/seed');
+const { authLimiter, passwordResetLimiter } = require('./middleware/rateLimit');
 
 // Route imports
 const authRoutes = require('./routes/auth');
@@ -17,6 +19,18 @@ const adminRoutes = require('./routes/admin');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+// Managed hosts (Render/Railway) sit behind a reverse proxy. Trust the first
+// proxy hop so express-rate-limit and req.ip see the real client address from
+// X-Forwarded-For instead of the proxy's IP.
+app.set('trust proxy', 1);
+
+// ── Security headers ──
+// Helmet sets HSTS, X-Frame-Options, X-Content-Type-Options, etc. The default
+// Content-Security-Policy is disabled because Express serves the bundled React
+// SPA from the same origin and a strict CSP can block its assets; the other
+// protections still apply.
+app.use(helmet({ contentSecurityPolicy: false }));
 
 // ── Middleware ──
 // Same-origin in production (Express serves the frontend), so CORS mainly
@@ -38,6 +52,12 @@ app.use((req, res, next) => {
 });
 
 // ── API Routes ──
+// General IP ceiling across the whole auth surface, then a stricter ceiling
+// layered on the low-entropy password reset. Registering the strict limiter
+// after the general one means it runs second for /forgot-password, so its
+// tighter limit is the one that governs (and is reported in the headers).
+app.use('/api/auth', authLimiter);
+app.use('/api/auth/forgot-password', passwordResetLimiter);
 app.use('/api/auth', authRoutes);
 app.use('/api/vehicles', vehicleRoutes);
 app.use('/api/wallet', walletRoutes);

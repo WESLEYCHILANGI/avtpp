@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import PasswordField from '../../components/PasswordField';
 
 export default function AdminLogin() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { adminLogin } = useAuth();
@@ -37,18 +37,18 @@ export default function AdminLogin() {
 
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label>Admin Email</label>
-            <input type="email" className="form-input" placeholder="admin@nrfa.gov.zm" value={email} onChange={(e) => setEmail(e.target.value)} required />
+            <label htmlFor="admin-email">Admin Email</label>
+            <p className="field-hint">Your NRFA administrator email.</p>
+            <input id="admin-email" type="email" className="form-input" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" required />
           </div>
-          <div className="form-group">
-            <label>Password</label>
-            <div className="password-wrapper">
-              <input type={showPassword ? 'text' : 'password'} className="form-input" placeholder="Enter admin password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-              <button type="button" className="password-toggle" onClick={() => setShowPassword(!showPassword)} aria-label={showPassword ? 'Hide password' : 'Show password'}>
-                {showPassword ? 'Hide' : 'Show'}
-              </button>
-            </div>
-          </div>
+          <PasswordField
+            id="admin-password"
+            label="Password"
+            hint="Your admin account password."
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            autoComplete="current-password"
+          />
           <button type="submit" className="btn btn-primary btn-full btn-lg" disabled={loading} id="admin-login-submit">
             {loading ? 'Authenticating...' : 'Admin Sign In'}
           </button>

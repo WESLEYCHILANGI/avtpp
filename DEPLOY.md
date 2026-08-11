@@ -13,6 +13,11 @@ Everything in the code is already prepared:
   (toll gates, tariffs, the admin account, and a demo user). Disable with
   `SEED_ON_START=false`.
 - `server/.env.example` — the full list of environment variables.
+- **Security hardening is built in** — Helmet sets HTTP security headers (HSTS,
+  X-Frame-Options, X-Content-Type-Options, etc.) and IP rate limiting protects
+  the auth surface (50 req / 15 min on `/api/auth/*`; 5 / hour on
+  `/api/auth/forgot-password`). The container runs as a non-root user. No setup
+  required.
 
 > The only thing that needs **you**: free accounts. I can't create them or pay for
 > anything. Create the accounts below, then I can drive the rest with you.
@@ -117,6 +122,8 @@ railway domain          # generate the public URL
 - [ ] **Change the seeded admin password** (`admin@nrfa.gov.zm` / `Admin@2026`) —
       it ships only for first access. Use the admin UI or update the DB.
 - [ ] Rotate `JWT_SECRET` and `GATE_API_KEY` to fresh random values.
+- [ ] Confirm security headers are present:
+      `curl -sI https://<your-url>/api/health | grep -i "x-frame-options\|strict-transport"`.
 
 ## Local sanity check before deploying
 

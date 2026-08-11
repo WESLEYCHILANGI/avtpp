@@ -52,7 +52,11 @@ async function getPool() {
       waitForConnections: true,
       connectionLimit: 10,
       queueLimit: 0,
-      multipleStatements: true,
+      // NOTE: multipleStatements is intentionally NOT enabled on the application
+      // query pool — keeping it off means a single query can never run stacked
+      // statements, removing a whole class of SQL-injection risk. Schema setup,
+      // which legitimately needs multi-statement execution, uses its own
+      // dedicated connections in initializeDatabase() below.
     });
   }
   return pool;

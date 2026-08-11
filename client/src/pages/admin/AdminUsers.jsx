@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import api from '../../services/api';
 import { formatDate } from '../../utils/format';
 import ActionMenu from '../../components/ActionMenu';
+import PasswordField from '../../components/PasswordField';
 
 export default function AdminUsers() {
   const [users, setUsers] = useState([]);
@@ -15,7 +16,6 @@ export default function AdminUsers() {
   // Password reset modal state
   const [resetUser, setResetUser] = useState(null);
   const [newPassword, setNewPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
   const [resetLoading, setResetLoading] = useState(false);
   const [resetError, setResetError] = useState('');
   const [resetSuccess, setResetSuccess] = useState('');
@@ -61,7 +61,6 @@ export default function AdminUsers() {
   const openResetModal = (user) => {
     setResetUser(user);
     setNewPassword('');
-    setShowPassword(false);
     setResetError('');
     setResetSuccess('');
   };
@@ -210,31 +209,13 @@ export default function AdminUsers() {
                 {resetError && <div className="alert alert-danger" style={{ marginBottom: '12px' }}>{resetError}</div>}
                 {resetSuccess && <div className="alert alert-success" style={{ marginBottom: '12px' }}>{resetSuccess}</div>}
 
-                <div className="form-group">
-                  <label>New Password</label>
-                  <div className="password-wrapper">
-                    <input
-                      type={showPassword ? 'text' : 'password'}
-                      className="form-input"
-                      placeholder="Minimum 8 characters"
-                      value={newPassword}
-                      onChange={(e) => setNewPassword(e.target.value)}
-                      required
-                      minLength={8}
-                    />
-                    <button
-                      type="button"
-                      className="password-toggle"
-                      onClick={() => setShowPassword(!showPassword)}
-                      aria-label={showPassword ? 'Hide password' : 'Show password'}
-                    >
-                      {showPassword ? 'Hide' : 'Show'}
-                    </button>
-                  </div>
-                  <p style={{ fontSize: '0.78rem', color: 'var(--gray-400)', marginTop: '6px' }}>
-                    Please share the new password with the user securely.
-                  </p>
-                </div>
+                <PasswordField
+                  id="reset-new-password"
+                  label="New Password"
+                  hint="At least 8 characters. Share it with the user securely."
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                />
               </div>
               <div className="modal-footer">
                 <button type="button" className="btn btn-outline" onClick={closeResetModal}>Cancel</button>

@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../services/api';
+import PasswordField from '../components/PasswordField';
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirm, setConfirm] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
@@ -51,65 +51,49 @@ export default function ForgotPassword() {
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="fp-email">Email Address</label>
+            <p className="field-hint">The email on your account.</p>
             <input
               id="fp-email"
               type="email"
               className="form-input"
-              placeholder="you@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              autoComplete="email"
               required
             />
           </div>
 
           <div className="form-group">
             <label htmlFor="fp-phone">Registered Phone Number</label>
+            <p className="field-hint">The mobile number you signed up with — used to verify it&#39;s you.</p>
             <input
               id="fp-phone"
               type="tel"
               className="form-input"
-              placeholder="+260 9XX XXX XXX"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
+              autoComplete="tel"
               required
             />
           </div>
 
-          <div className="form-group">
-            <label htmlFor="fp-password">New Password</label>
-            <div className="password-wrapper">
-              <input
-                id="fp-password"
-                type={showPassword ? 'text' : 'password'}
-                className="form-input"
-                placeholder="At least 8 characters"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                required
-              />
-              <button
-                type="button"
-                className="password-toggle"
-                onClick={() => setShowPassword(!showPassword)}
-                aria-label={showPassword ? 'Hide password' : 'Show password'}
-              >
-                {showPassword ? 'Hide' : 'Show'}
-              </button>
-            </div>
-          </div>
+          <PasswordField
+            id="fp-password"
+            label="New Password"
+            hint="At least 8 characters."
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            autoComplete="new-password"
+          />
 
-          <div className="form-group">
-            <label htmlFor="fp-confirm">Confirm New Password</label>
-            <input
-              id="fp-confirm"
-              type={showPassword ? 'text' : 'password'}
-              className="form-input"
-              placeholder="Re-enter new password"
-              value={confirm}
-              onChange={(e) => setConfirm(e.target.value)}
-              required
-            />
-          </div>
+          <PasswordField
+            id="fp-confirm"
+            label="Confirm New Password"
+            hint="Re-enter the new password."
+            value={confirm}
+            onChange={(e) => setConfirm(e.target.value)}
+            autoComplete="new-password"
+          />
 
           <button type="submit" className="btn btn-primary btn-full btn-lg" disabled={loading} id="fp-submit">
             {loading ? 'Resetting...' : 'Reset Password'}

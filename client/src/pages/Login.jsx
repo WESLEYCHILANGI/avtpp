@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import PasswordField from '../components/PasswordField';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
@@ -38,39 +38,26 @@ export default function Login() {
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="login-email">Email Address</label>
+            <p className="field-hint">The email you registered with.</p>
             <input
               id="login-email"
               type="email"
               className="form-input"
-              placeholder="you@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              autoComplete="email"
               required
             />
           </div>
 
-          <div className="form-group">
-            <label htmlFor="login-password">Password</label>
-            <div className="password-wrapper">
-              <input
-                id="login-password"
-                type={showPassword ? 'text' : 'password'}
-                className="form-input"
-                placeholder="Enter your password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-              <button
-                type="button"
-                className="password-toggle"
-                onClick={() => setShowPassword(!showPassword)}
-                aria-label={showPassword ? 'Hide password' : 'Show password'}
-              >
-                {showPassword ? 'Hide' : 'Show'}
-              </button>
-            </div>
-          </div>
+          <PasswordField
+            id="login-password"
+            label="Password"
+            hint="Your account password."
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            autoComplete="current-password"
+          />
 
           <div style={{ textAlign: 'right', marginBottom: '16px', marginTop: '-6px' }}>
             <Link to="/forgot-password" style={{ fontSize: '0.82rem', fontWeight: 600 }}>Forgot password?</Link>
