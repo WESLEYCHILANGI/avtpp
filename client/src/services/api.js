@@ -2,6 +2,26 @@
 // Override with VITE_API_BASE for a split frontend/backend setup.
 const API_BASE = import.meta.env.VITE_API_BASE || '/api';
 
+// Auth endpoints where a 401 is a normal business response (wrong password,
+// etc.) rather than an expired session — must NOT trigger an auto-logout.
+const AUTH_ENDPOINT = /^\/auth\/(login|register|forgot-password|admin\/login)/;
+
+// Session expired / token rejected on an authenticated request: clear the
+// stored session and send the user to the appropriate login screen.
+function handleSessionExpiry(isAdmin) {
+  const loginPath = isAdmin ? '/admin/login' : '/login';
+  if (isAdmin) {
+    localStorage.removeItem('avtpp_admin_token');
+    localStorage.removeItem('avtpp_admin');
+  } else {
+    localStorage.removeItem('avtpp_token');
+    localStorage.removeItem('avtpp_user');
+  }
+  if (window.location.pathname !== loginPath) {
+    window.location.assign(loginPath);
+  }
+}
+
 async function request(method, path, data = null, isAdmin = false) {
   const tokenKey = isAdmin ? 'avtpp_admin_token' : 'avtpp_token';
   const token = localStorage.getItem(tokenKey);
@@ -20,16 +40,21 @@ async function request(method, path, data = null, isAdmin = false) {
   }
 
   const res = await fetch(`${API_BASE}${path}`, config);
-  
+
   // Handle CSV downloads
   if (res.headers.get('content-type')?.includes('text/csv')) {
     const blob = await res.blob();
     return { data: blob, ok: true };
   }
 
-  const json = await res.json();
+  const json = await res.json().catch(() => ({}));
 
   if (!res.ok) {
+    // A token was sent but rejected on a protected route → the session expired.
+    if ((res.status === 401 || res.status === 403) && token && !AUTH_ENDPOINT.test(path)) {
+      handleSessionExpiry(isAdmin);
+      throw { status: res.status, message: 'Your session has expired. Please log in again.', data: json };
+    }
     throw { status: res.status, message: json.error || 'Request failed', data: json };
   }
 

@@ -4,12 +4,14 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { query } = require('../config/database');
 const { authenticateToken } = require('../middleware/auth');
+const { normalizeEmail } = require('../utils/normalize');
 
 // ── POST /api/auth/register ──
 // FR01: Register with full name, email, phone, password
 router.post('/register', async (req, res) => {
   try {
-    const { firstName, lastName, email, phone, password } = req.body;
+    const { firstName, lastName, phone, password } = req.body;
+    const email = normalizeEmail(req.body.email);
 
     // Validation
     if (!firstName || !lastName || !email || !phone || !password) {
@@ -19,8 +21,8 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ error: 'Password must be at least 8 characters.' });
     }
 
-    // Check existing user
-    const existing = await query('SELECT UserID FROM Users WHERE Email = ?', [email]);
+    // Check existing user (case-insensitively, so no near-duplicate accounts)
+    const existing = await query('SELECT UserID FROM Users WHERE LOWER(Email) = ?', [email]);
     if (existing.length > 0) {
       return res.status(409).json({ error: 'An account with this email already exists.' });
     }
@@ -69,13 +71,14 @@ router.post('/register', async (req, res) => {
 // FR02: Secure login with account lockout (NFR03: 5 failed attempts)
 router.post('/login', async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { password } = req.body;
+    const email = normalizeEmail(req.body.email);
 
     if (!email || !password) {
       return res.status(400).json({ error: 'Email and password are required.' });
     }
 
-    const users = await query('SELECT * FROM Users WHERE Email = ?', [email]);
+    const users = await query('SELECT * FROM Users WHERE LOWER(Email) = ?', [email]);
     if (users.length === 0) {
       return res.status(401).json({ error: 'Invalid email or password.' });
     }
@@ -250,7 +253,8 @@ router.delete('/profile-picture', authenticateToken, async (req, res) => {
 // password. In production this would be replaced by an emailed reset token.
 router.post('/forgot-password', async (req, res) => {
   try {
-    const { email, phone, newPassword } = req.body;
+    const { phone, newPassword } = req.body;
+    const email = normalizeEmail(req.body.email);
     if (!email || !phone || !newPassword) {
       return res.status(400).json({ error: 'Email, phone number and a new password are required.' });
     }
@@ -258,7 +262,7 @@ router.post('/forgot-password', async (req, res) => {
       return res.status(400).json({ error: 'Password must be at least 8 characters.' });
     }
     const users = await query(
-      'SELECT UserID FROM Users WHERE Email = ? AND PhoneNumber = ?',
+      'SELECT UserID FROM Users WHERE LOWER(Email) = ? AND PhoneNumber = ?',
       [email, phone]
     );
     if (users.length === 0) {

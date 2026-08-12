@@ -134,7 +134,7 @@ router.post('/process', authenticateToken, async (req, res) => {
 
     // Verify vehicle belongs to the authenticated user
     const [vehicles] = await conn.execute(
-      'SELECT * FROM Vehicles WHERE VehicleID = ? AND UserID = ?',
+      'SELECT * FROM Vehicles WHERE VehicleID = ? AND UserID = ? AND IsActive = 1',
       [vehicleId, req.user.userId]
     );
     if (vehicles.length === 0) {
@@ -180,7 +180,7 @@ router.post('/gate-trigger', authenticateGate, async (req, res) => {
 
     // Resolve the plate to a registered vehicle (the gate has no user context)
     const [vehicles] = await conn.execute(
-      'SELECT * FROM Vehicles WHERE LicencePlate = ?',
+      'SELECT * FROM Vehicles WHERE LicencePlate = ? AND IsActive = 1',
       [plate]
     );
     if (vehicles.length === 0) {

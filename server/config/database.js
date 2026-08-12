@@ -102,6 +102,9 @@ async function initializeDatabase() {
 async function ensureColumns(conn) {
   const statements = [
     'ALTER TABLE Users ADD COLUMN ProfilePicture MEDIUMTEXT DEFAULT NULL',
+    // Soft-delete flag so a vehicle with toll history can be removed from the
+    // user's view without deleting the (financial) transaction records.
+    'ALTER TABLE Vehicles ADD COLUMN IsActive TINYINT(1) NOT NULL DEFAULT 1',
   ];
   for (const sql of statements) {
     try {

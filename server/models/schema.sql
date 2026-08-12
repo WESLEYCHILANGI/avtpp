@@ -43,6 +43,7 @@ CREATE TABLE IF NOT EXISTS Vehicles (
     Year YEAR NOT NULL,
     VehicleClass ENUM('Class1_Motorcycle', 'Class2_LightVehicle', 'Class3_Minibus', 'Class4_HeavyBus', 'Class5_LightTruck', 'Class6_HeavyTruck') NOT NULL DEFAULT 'Class2_LightVehicle',
     DateAdded DATETIME DEFAULT CURRENT_TIMESTAMP,
+    IsActive TINYINT(1) NOT NULL DEFAULT 1,
     FOREIGN KEY (UserID) REFERENCES Users(UserID) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
